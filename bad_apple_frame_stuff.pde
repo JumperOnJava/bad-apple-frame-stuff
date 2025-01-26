@@ -1,4 +1,8 @@
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 void setup() {
   size(500, 500);
@@ -12,11 +16,11 @@ boolean getColor(int x, int y) {
   boolean r = red(c) <= 128;
   fill(r ? 0 : 255, r ? 255 : 0, 0);
   rect(x - 1, y - 1, 3, 3);
-  return r;
+  return !r;
 }
 
-int f = 0;
-PrintWriter output = createWriter("bad_apple.txt");
+int f = 304;
+String fullText = "";
 
 void draw() {
   initialize();
@@ -24,8 +28,13 @@ void draw() {
 
 void initialize() {
   fill(255, 0, 0);
-  if (f == 500) {
-    
+  if (f == 404) {
+    var path = Paths.get("C:\\Users\\JavaJumper\\Desktop\\badapple\\rick.txt");
+    var text = fullText;
+    println(path.toString());
+    println(text.length());
+    write(path, text);
+    println("sex");
     exit();
     return;
   }
@@ -34,10 +43,10 @@ void initialize() {
   String frameString = String.format("%05d", f);
   println(frameString);
   
-  PImage frame = loadImage("frames/frame" + frameString + ".jpg");
+  PImage frame = loadImage("frames/frame-" + frameString + ".png");
   if (frame == null) return;
   
-  image(frame, 0, 0);
+  image(frame, 0, 0, 490, 350 );
   
   int is = 8, js = 22;
   
@@ -67,10 +76,19 @@ void initialize() {
       int begin = 0x2800;
       line.append((char) (begin + symbol));
     }
-    println(line);
-    output.println(line);
+    fullText+=line;
+    fullText+="\n";
   }
 }
+void write(Path path, String text) {
+    try {
+        byte[] strToBytes = text.getBytes("UTF-8"); // Specify UTF-8 encoding
+        Files.write(path, strToBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+}
+
 
 short setBit(int value, boolean setBit, int bitPosition) {
         if (setBit) {
